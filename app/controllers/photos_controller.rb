@@ -16,8 +16,7 @@ class PhotosController < ApplicationController
   # POST /photos
   def create
     @photo = Photo.new(params[:pic])
-    @photo.pic = params[:file]
-
+    @photo.pic = params[:file] if params[:file]
     if @photo.save
       render json: @photo, status: :created, location: @photo
     else
@@ -27,8 +26,8 @@ class PhotosController < ApplicationController
 
   # PATCH/PUT /photos/1
   def update
+    @photo.pic = params[:file] if params[:file]
     if @photo.update(params[:pic])
-      @photo.pic = params[:file]
       render json: @photo
     else
       render json: @photo.errors, status: :unprocessable_entity
@@ -48,6 +47,6 @@ class PhotosController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def photo_params
-      params.require(:photo).permit(:pic)
+      params.require(:photo).permit(:id, :pic, :title, :description, :author)
     end
 end
